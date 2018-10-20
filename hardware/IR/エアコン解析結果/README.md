@@ -9,6 +9,8 @@ Panasonic CS-285CF
 ## データの構成
 Leader＋識別番号＋Tracer＋Leader＋データ＋Tracer
 
+
+
 1パルス：約430us　→　T = 430us
 
 ONタイム：38kHzでデューティ比50%の出力
