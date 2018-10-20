@@ -5,7 +5,7 @@ uint8_t i = 0, j = 0;
 int start_flag = 1;
 uint32_t start_t = 0;
 
-#define RX_IR A0
+#define RX_IR A0  //Arduino UNO
 
 void setup() 
 {
