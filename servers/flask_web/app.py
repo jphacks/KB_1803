@@ -42,6 +42,7 @@ def index():
     if len(sensordata_json2list) == 0:
         #return str("過去%s分間のデータがありません" % str(minutes))
         datalist = [0.0,0.0,0.0,0.0,0.0,0.0]
+        return "error"
     else:
         # リストから最新の要素を取り出す
         sensordata_dict = sensordata_json2list[-1]
@@ -59,9 +60,7 @@ def index():
         rest_of_time = sensordata_dict['rest_of_time']
         time = sensordata_dict['time']
 
-
-
-    return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
+        return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
 
 # influxDBにデータを書き込む関数
 def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):

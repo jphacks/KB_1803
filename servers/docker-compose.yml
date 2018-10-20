@@ -15,7 +15,6 @@ services:
       - "2222:8008"
     links:
       - influxdb
-      - kapacitor
     environment:
       - PORT=8008
     volumes:
