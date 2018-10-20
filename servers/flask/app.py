@@ -159,9 +159,8 @@ def reply():
 
     datalist = readDB()    
 
-    write(dryness=datalist[0], rest_of_time=datalist[1])
+    write(dryness=datalist[0]*2, rest_of_time=datalist[1]*2)
     #write(dryness=100.0, rest_of_time=200.0)
-    #return str(data)
 
 
 
