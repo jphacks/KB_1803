@@ -11,10 +11,11 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def hello():
-    client = InfluxDBClient(host='influxdb', port=8086, database='prediction')
-    result = client.query("select * from results")
-    print("Result: {0}".format(result))
-    return "Result: {0}".format(result)
+    client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
+    prediction = client.query("select * from prediction")
+    # sensordata = client.query("select * from sensordata")
+    print("prediction: {0}".format(prediction))
+    return "prediction: {0}".format(prediction)
 
 @app.route('/reply', methods=['GET'])
 def reply():
@@ -26,10 +27,10 @@ def reply():
         # """Instantiate a connection to the InfluxDB."""
         user = 'root'
         password = 'root'
-        dbname = 'prediction'
+        dbname = 'superdry'
         json_body = [
             {
-                "measurement": "results",
+                "measurement": "prediction",
                 "tags": {
                     "user": "umetsu",
                     "id": "0"},
