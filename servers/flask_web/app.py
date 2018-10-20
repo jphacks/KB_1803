@@ -23,14 +23,33 @@ def sensor_request_api():
 
 @app.route("/", methods=['GET'])
 def index():
-
     client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
-    prediction = client.query("select * from prediction where time >= now() - 300m")
+    sensordata = client.query("select * from sensordata where time >= now() - 300m")
+    # prediction = client.query("select * from prediction where time >= now() - 300m")
 
-    # sensordata = client.query("select * from sensordata")
-    # print("prediction: {0}".format(prediction))
-    # return "prediction: {0}".format(prediction)
-    return render_template('index.html')
+    json2list = list(sensordata.get_points(measurement=None))
+
+    # 要素の有無
+    if len(json2list) == 0:
+        #return str("過去%s分間のデータがありません" % str(minutes))
+        datalist = [0,0,0,0,0,0]
+    else:
+        # リストから最新の要素を取り出す
+        sensordata_dict = json2list[-1]
+        # キー
+        keys = list(sensordata_dict.keys())
+        # 値
+        values = list(sensordata_dict.values())
+
+        # 取ってきた値を変数に代入()
+        wetness = sensordata_dict['wetness']
+        temperature = sensordata_dict['temperature']
+        co2 = sensordata_dict['co2']
+        humidity = sensordata_dict['humidity']
+        tvoc = sensordata_dict['tvoc']
+        time = sensordata_dict['time']
+
+    return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity)
 
 # @app.route('/write', methods=['GET'])
 def write(wetness, temperature, humidity, co2, tvoc):
