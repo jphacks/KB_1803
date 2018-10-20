@@ -1,6 +1,6 @@
-dbrp "telegraf"."autogen"
+dbrp "superdry"."autogen"
 
 stream
     |from()
-        .measurement('test')
+        .measurement('sensordata')
     |httpPost('http://flask:5000/reply')
