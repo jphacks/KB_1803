@@ -1,9 +1,9 @@
-# サンプル（プロダクト名）
+# Superdry. 極度乾燥（するやで）
 
 [![Product Name](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
 
 ## 製品概要
-### 極度乾燥 X Tech
+### 部屋干し X Tech
 
 ### 背景（製品開発のきっかけ、課題等）
 ここに
