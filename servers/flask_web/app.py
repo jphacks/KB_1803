@@ -53,8 +53,8 @@ def index():
         values = list(sensordata_dict.values())
 
         # 取ってきた値を変数に代入()
-        dryness = round((float(sensordata_dict['dryness'])),1)
-        temperature = (float(sensordata_dict['temperature']) / 100.0)
+        dryness = (int(sensordata_dict['dryness']))
+        temperature = int(float(sensordata_dict['temperature']) / 100.0)
         co2 = int(sensordata_dict['co2'])
         humidity = int(sensordata_dict['humidity'])
         tvoc = int(sensordata_dict['tvoc'])
