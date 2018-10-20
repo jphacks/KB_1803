@@ -152,17 +152,20 @@ def reply():
         ]
 
         print("client: ",host, port, user, password, dbname)
+        # クライアントを定義
         client = InfluxDBClient(host, port, user, password, dbname)
+        # データベースがなければ作成
         client.create_database(dbname)
-
+        # データを書き込み
         client.write_points(json_body)
 
+    # InfluxDBから最新のセンサ値をリストでを取得
     datalist = readDB()    
-
+    # センサ値を処理し，InfluxDBの別領域に書き込み
     write(dryness=datalist[0]*2, rest_of_time=datalist[1]*2)
-    #write(dryness=100.0, rest_of_time=200.0)
 
 
 
 if __name__ == "__main__":
+    # サーバを立てる
     app.run(host='0.0.0.0', port=5000, debug=True)
