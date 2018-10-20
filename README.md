@@ -1,7 +1,7 @@
 # Superdry. 極度乾燥（するやで）
 
-![Smart Hanger](極度乾燥するやで_ロゴ.png)
-[![Smart Hanger](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
+![Smart Hanger](images/superdry.png)
+[![Smart Hanger](images/image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
 
 ## 製品概要
 ### 部屋干し X Tech
@@ -45,8 +45,11 @@
 
 #### 4. 端末から室内環境，乾き具合の経過が見れる
 
-![Smart Hanger](Superdry.001.jpeg)
-![Smart Hanger](app.png)
+#### システム構成図
+![Smart Hanger](images/system.jpeg)
+
+#### スクリーンショット
+![Smart Hanger](images/app.png)
 
 ### 解決出来ること
 <!-- この製品を利用することによって最終的に解決できることについて記載をしてください。 -->
