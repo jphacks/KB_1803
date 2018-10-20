@@ -5,20 +5,24 @@ from influxdb import InfluxDBClient
 from pytz import timezone
 from datetime import datetime
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import json
 app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def hello():
-    client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
-    prediction = client.query("select * from prediction")
-    # sensordata = client.query("select * from sensordata")
-    print("prediction: {0}".format(prediction))
-    return "prediction: {0}".format(prediction)
 
-@app.route('/reply', methods=['GET'])
-def reply():
+    client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
+    prediction = client.query("select * from prediction where time >= now() - 300m")
+
+
+    # sensordata = client.query("select * from sensordata")
+    # print("prediction: {0}".format(prediction))
+    # return "prediction: {0}".format(prediction)
+    return render_template('index.html')
+
+@app.route('/write', methods=['GET'])
+def write():
 
 # 現在時刻
     utc_now = datetime.now(timezone('UTC'))
@@ -47,7 +51,7 @@ def reply():
         client.create_database(dbname)
         client.write_points(json_body)
 
-    write(per=0.4, time=60)
+    write(per=0.5, time=30)
 
 
     return "write"
