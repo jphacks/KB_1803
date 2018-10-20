@@ -88,6 +88,7 @@ def reply():
         print("client: ",host, port, user, password, dbname)
         client = InfluxDBClient(host, port, user, password, dbname)
         client.create_database(dbname)
+
         client.write_points(json_body)
 
     write(per=0.6, time=6*2)
