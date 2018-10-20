@@ -11,6 +11,11 @@ Leader＋識別番号＋Tracer＋Leader＋データ＋Tracer
 
 1パルス：約430us　→　T = 430us
 
+ONタイム：38kHzでデューティ比50%の出力
+
+OFFタイム：0の出力
+
+
 Leader  
 　データの開始を知らせるコード  
 　ONタイム：8T　　OFFタイム：4T
