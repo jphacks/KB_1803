@@ -16,16 +16,17 @@ def sensor_request_api():
     # リクエストの引数から，各センサ値を抽出
     params = request.args
     wetness = params.get('wetness', default='0', type = str)
+    dryness = 100.0 - (float(wetness) / 4095.0) * 100.0
     temperature = params.get('temperature', default='0', type = str)
     humidity = params.get('humidity', default='0', type = str)
     co2 = params.get('co2', default='0', type = str)
     tvoc = params.get('tvoc', default='0', type = str)
 
     # 乾くまでの残り時間を計算
-    rest_of_time = calc.calc(wetness, temperature, humidity)
+    rest_of_time = calc.calc(dryness, temperature, humidity)
 
     # センサ値と計算値をinfluxDBに書き込む
-    write(wetness, temperature, humidity, co2, tvoc, rest_of_time)
+    write(dryness, temperature, humidity, co2, tvoc, rest_of_time)
 
     # 完了したで
     return 'success'###"wetness" + wetness + " temperature:" + temperature + " humidity" + humidity + " co2" + co2 + " tvoc:" + tvoc
@@ -52,18 +53,18 @@ def index():
         values = list(sensordata_dict.values())
 
         # 取ってきた値を変数に代入()
-        wetness = sensordata_dict['wetness']
-        temperature = sensordata_dict['temperature']
-        co2 = sensordata_dict['co2']
-        humidity = sensordata_dict['humidity']
-        tvoc = sensordata_dict['tvoc']
-        rest_of_time = sensordata_dict['rest_of_time']
+        dryness = round((float(sensordata_dict['dryness'])),1)
+        temperature = (float(sensordata_dict['temperature']) / 100.0)
+        co2 = int(sensordata_dict['co2'])
+        humidity = int(sensordata_dict['humidity'])
+        tvoc = int(sensordata_dict['tvoc'])
+        rest_of_time = int(sensordata_dict['rest_of_time'])
         time = sensordata_dict['time']
 
-        return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
+        return render_template('index.html', dryness=dryness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
 
 # influxDBにデータを書き込む関数
-def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):
+def write(dryness, temperature, humidity, co2, tvoc, rest_of_time):
 
     utc_now = datetime.now(timezone('UTC'))
     jst_now = utc_now.astimezone(timezone('Asia/Tokyo'))
@@ -80,12 +81,12 @@ def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):
                 "id": "0"},
             "time": str(jst_now),
             "fields": {
-                "wetness": float(wetness),
-                "temperature": float(temperature),
-                "humidity": float(humidity),
-                "co2": float(co2),
-                "tvoc": float(tvoc),
-                "rest_of_time": float(rest_of_time)
+                "dryness": dryness,
+                "temperature": temperature,
+                "humidity": humidity,
+                "co2": co2,
+                "tvoc": tvoc,
+                "rest_of_time": rest_of_time
             }
         }
     ]
