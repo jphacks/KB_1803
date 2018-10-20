@@ -7,7 +7,6 @@ FROM python:3.5.2-onbuild
 RUN apt-get update
 RUN pip install --upgrade pip
 RUN pip install sklearn #これ，scikit-learnとは別物
-RUN pip install apscheduler
 
 # サーバを立ち上げる
 CMD ["python", "/usr/src/app/app.py"]
