@@ -1,5 +1,6 @@
 # Superdry. 極度乾燥（するやで）
 
+[![Smart Hanger](極度乾燥するやで_ロゴ.png)]
 [![Smart Hanger](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
 
 ## 製品概要
