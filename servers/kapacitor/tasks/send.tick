@@ -1,0 +1,6 @@
+dbrp "telegraf"."autogen"
+
+stream
+    |from()
+        .measurement('test')
+    |httpPost('http://node:3000/tests/')

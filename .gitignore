@@ -1,0 +1,3 @@
+*.db
+servers/influxdb/data/*
+servers/chronograf/data/*

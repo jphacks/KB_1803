@@ -1,0 +1,6 @@
+dbrp "telegraf"."autogen"
+
+stream
+    |from()
+        .measurement('test')
+    |httpPost('http://flask:5000/reply')

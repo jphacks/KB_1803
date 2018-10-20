@@ -1,0 +1,80 @@
+version: "3"
+
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - "1111:8086"
+    # environment:
+    #   - PRE_CREATE_DB=trustroots
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb
+      - ./influxdb/config/:/etc/influxdb/
+
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - "2222:8008"
+    links:
+      - influxdb
+      - kapacitor
+    environment:
+      - PORT=8008
+    volumes:
+      - ./chronograf/data/:/var/lib/chronograf/
+
+  telegraf:
+    image: telegraf:latest
+    links:
+      - influxdb
+    volumes:
+      - ./telegraf/:/etc/telegraf/
+
+  kapacitor:
+    image: kapacitor:latest
+    ports:
+      - "3333:9092"
+    links:
+      - influxdb
+      - node
+    volumes:
+      - ./kapacitor/data/:/var/lib/kapacitor
+      - ./kapacitor/config/:/etc/kapacitor/
+      - ./kapacitor/tasks:/etc/kapacitor/load/tasks:ro
+
+  node:
+    build: ./node
+    ports:
+      - "4444:3000"
+    links:
+      - mongo
+    volumes:
+      - ./node:/usr/src/app
+      - /usr/src/app/node_modules
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "5555:27017"
+
+  jupyter:
+    build: ./jupyter
+    ports:
+      - "7777:8888"
+    links:
+      - telegraf
+    environment:
+      - PASSWORD=password
+    volumes:
+      - ./jupyter/notebooks:/notebooks
+
+  flask:
+    build: ./flask
+    ports:
+      - "5000:5000"
+    links:
+      - influxdb
+      - kapacitor
+      - chronograf
+    volumes:
+      - ./flask/:/usr/src/app/
