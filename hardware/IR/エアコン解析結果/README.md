@@ -4,7 +4,7 @@
 Panasonic CS-285CF
 
 ## ファイル名  
-モード，温度の範囲，風量，風向
+モード，温度の範囲，風量，風向　.txt
 
 ## データの構成
 Leader＋識別番号＋Tracer＋Leader＋データ＋Tracer
