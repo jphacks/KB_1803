@@ -16,53 +16,119 @@ from influxdb import InfluxDBClient
 # このアプリ
 app = Flask(__name__)
 
-#10/20 10:36 kapacitorから受けるデータの型がわからないから，flaskからgetする処理を毎分行うことにする
-def example_digits(nums):
-
-    #scilit-learnライブラリに付属しているデータセット"digits"を利用
-    digits = datasets.load_digits()
-
-    #サポートベクターマシン（というもの）を使って、分類.
-    # 64個のint配列:正解の数字
-    clf = svm.SVC()
-    clf.fit(digits.data,digits.target)
-
-    #仮に下記の"test_data"のようなデータは、どの数字に該当するか？を予測
-    test = nums
-    test_data = [test]
-
-    c1 = "-----テスト----"
-    c2 = str(test_data)
-
-    d1 = "-----予測----"
-    global pre
-    pre = clf.predict(test_data)
-    d2 = str(pre)
-
-    text = c1+"<br>"+c2+"<br>"+d1+"<br>"+d2
-
-    return(text)
-
+# "/"の時のアプリ
 @app.route("/", methods=['GET'])
 def hello():
-    # jsonで取ってきて表示
-    client = InfluxDBClient(host='influxdb', port=8086, database='prediction')
-    result = client.query("select * from results")
-    print("Result: {0}".format(result))
-    # json形式のデータをリスト化
-    data2 = list(result.get_points(measurement=None))
-    return str(data2)
+    # jsonで取ってくる
+    client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
+    # 最新のminutes分のデータを取り出す
+    minutes = 60
+    result = client.query("select * from sensordata where time >= now() - %sm" % str(minutes))    
+    # json形式のデータをリスト形式に変更
+    json2list = list(result.get_points(measurement=None))
 
+    # 要素の有無
+    if len(json2list) == 0:
+        return str("過去%s分間のデータがありません" % str(minutes))
+
+    else:
+        # リストから最新の要素を取り出す
+        sensordata_dict = json2list[-1]
+        # キー
+        keys = list(sensordata_dict.keys())
+        # 値
+        values = list(sensordata_dict.values())
+
+        # 取ってきた値を変数に代入()
+        Wet = sensordata_dict['wetness']
+        Temp = sensordata_dict['temperature']
+        Co2 = sensordata_dict['co2']
+        Hum = sensordata_dict['humidity']
+        Tvoc = sensordata_dict['tvoc']
+        Time = sensordata_dict['time']
+        # User = sensordata_dict['user']
+        # Id = sensordata_dict['id']
+
+        return str(keys)+str(values)
+
+#"/reply"の時のアプリ（superdry.autogenにデータが書き込まれるごとに呼び出される）
 @app.route('/reply', methods=['POST'])
 def reply():
+    """HttpOutで与えられたデータを実質使えていないので，できれば使いたいけど後回しで
     data = request.get_json()
     # result = {
     #   "Content-Type": "application/json",
     #   "Answer":{"Text": data}
     # }
     # return jsonify(result)
+    """
     
-    def write(host='influxdb',port=8086,per=None,time=None):
+    # Influxdbからデータを取得する関数
+    def readDB():
+        # jsonで取ってくる
+        client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
+        # 最新のminutes分のデータを取り出す
+        minutes = 10
+        result = client.query("select * from sensordata where time >= now() - %sm" % str(minutes))    
+        # json形式のデータをリスト形式に変更
+        json2list = list(result.get_points(measurement=None))
+
+        # 要素の有無
+        if len(json2list) == 0:
+            #return str("過去%s分間のデータがありません" % str(minutes))
+            datalist = [0,0,0,0,0,0]
+
+        else:
+            # リストから最新の要素を取り出す
+            sensordata_dict = json2list[-1]
+            # キー
+            keys = list(sensordata_dict.keys())
+            # 値
+            values = list(sensordata_dict.values())
+
+            # 取ってきた値を変数に代入()
+            Wet = sensordata_dict['wetness']
+            Temp = sensordata_dict['temperature']
+            Co2 = sensordata_dict['co2']
+            Hum = sensordata_dict['humidity']
+            Tvoc = sensordata_dict['tvoc']
+            Time = sensordata_dict['time']
+            # User = sensordata_dict['user']
+            # Id = sensordata_dict['id']
+
+            datalist = [Wet,Temp,Co2,Hum,Tvoc,Time]
+        
+        return datalist
+
+    # 機械学習の結果を返す関数
+    def example_digits(nums):
+        #scilit-learnライブラリに付属しているデータセット"digits"を利用
+        digits = datasets.load_digits()
+
+        #サポートベクターマシン（というもの）を使って、分類.
+        # 64個のint配列:正解の数字
+        clf = svm.SVC()
+        clf.fit(digits.data,digits.target)
+
+        #仮に下記の"test_data"のようなデータは、どの数字に該当するか？を予測
+        test = nums
+        test_data = [test]
+
+        c1 = "-----テスト----"
+        c2 = str(test_data)
+
+        d1 = "-----予測----"
+        global pre
+        pre = clf.predict(test_data)
+        d2 = str(pre)
+
+        text = c1+"<br>"+c2+"<br>"+d1+"<br>"+d2
+
+        return(text)
+
+
+    # Influxdbにデータを書き込む関数
+    def write(host='influxdb',port=8086,dryness=None,rest_of_time=None):
         # 現在時刻 →　データ取得した時刻
         utc_now = datetime.now(timezone('UTC'))
         jst_now = utc_now.astimezone(timezone('Asia/Tokyo'))
@@ -70,17 +136,17 @@ def reply():
         ###Instantiate a connection to the InfluxDB.###
         user = 'root'
         password = 'root'
-        dbname = 'prediction'
+        dbname = 'superdry'
         json_body = [
             {
-                "measurement": "results",
+                "measurement": "prediction",
                 "tags": {
                     "user": "umetsu",
                     "id": "0"},
                 "time": str(jst_now),
                 "fields": {
-                    "dryness": per,
-                    "rest_of_time": time,
+                    "dryness": dryness,
+                    "rest_of_time": rest_of_time,
                     }
             }
         ]
@@ -91,9 +157,11 @@ def reply():
 
         client.write_points(json_body)
 
-    write(per=0.6, time=6*2)
+    datalist = readDB()    
 
-    return str(data)
+    write(dryness=datalist[0], rest_of_time=datalist[1])
+    #write(dryness=100.0, rest_of_time=200.0)
+    #return str(data)
 
 
 
