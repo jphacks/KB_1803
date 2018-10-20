@@ -78,3 +78,12 @@ services:
       - chronograf
     volumes:
       - ./flask/:/usr/src/app/
+
+  flask_web:
+    build: ./flask_web
+    ports:
+      - "6500:6500"
+    links:
+      - influxdb
+    volumes:
+      - ./flask_web/:/usr/src/app/
