@@ -7,6 +7,7 @@ from datetime import datetime
 
 from flask import Flask, jsonify, request, render_template, make_response
 import json
+import calc
 app = Flask(__name__)
 
 @app.route("/api", methods=['GET'])
@@ -18,24 +19,25 @@ def sensor_request_api():
     co2 = params.get('co2', default='0', type = str)
     tvoc = params.get('tvoc', default='0', type = str)
 
-    write(wetness, temperature, humidity, co2, tvoc)
-    return 'hoge'###"wetness" + wetness + " temperature:" + temperature + " humidity" + humidity + " co2" + co2 + " tvoc:" + tvoc
+    rest_of_time = calc.calc(wetness, temperature, humidity)
+
+    write(wetness, temperature, humidity, co2, tvoc, rest_of_time)
+    return 'success'###"wetness" + wetness + " temperature:" + temperature + " humidity" + humidity + " co2" + co2 + " tvoc:" + tvoc
 
 @app.route("/", methods=['GET'])
 def index():
     client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
     sensordata = client.query("select * from sensordata where time >= now() - 300m")
-    # prediction = client.query("select * from prediction where time >= now() - 300m")
 
-    json2list = list(sensordata.get_points(measurement=None))
+    sensordata_json2list = list(sensordata.get_points(measurement=None))
 
     # 要素の有無
-    if len(json2list) == 0:
+    if len(sensordata_json2list) == 0:
         #return str("過去%s分間のデータがありません" % str(minutes))
         datalist = [0,0,0,0,0,0]
     else:
         # リストから最新の要素を取り出す
-        sensordata_dict = json2list[-1]
+        sensordata_dict = sensordata_json2list[-1]
         # キー
         keys = list(sensordata_dict.keys())
         # 値
@@ -47,12 +49,15 @@ def index():
         co2 = sensordata_dict['co2']
         humidity = sensordata_dict['humidity']
         tvoc = sensordata_dict['tvoc']
+        rest_of_time = sensordata_dict['rest_of_time']
         time = sensordata_dict['time']
 
-    return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity)
+
+
+    return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
 
 # @app.route('/write', methods=['GET'])
-def write(wetness, temperature, humidity, co2, tvoc):
+def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):
 
     utc_now = datetime.now(timezone('UTC'))
     jst_now = utc_now.astimezone(timezone('Asia/Tokyo'))
@@ -73,7 +78,8 @@ def write(wetness, temperature, humidity, co2, tvoc):
                 "temperature": float(temperature),
                 "humidity": float(humidity),
                 "co2": float(co2),
-                "tvoc": float(tvoc)
+                "tvoc": float(tvoc),
+                "rest_of_time": float(rest_of_time)
             }
         }
     ]
