@@ -1,6 +1,6 @@
 # Superdry. 極度乾燥（するやで）
 
-[![Smart Hanger](極度乾燥するやで_ロゴ.png)]
+![Smart Hanger](極度乾燥するやで_ロゴ.png)
 [![Smart Hanger](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
 
 ## 製品概要
@@ -44,6 +44,8 @@
 #### 3. 乾燥具合に応じて家電を効率的に制御
 
 #### 4. 端末から室内環境，乾き具合の経過が見れる
+
+![Smart Hanger](Superdry001.jpeg)
 
 
 ### 解決出来ること
