@@ -10,8 +10,10 @@ import json
 import calc
 app = Flask(__name__)
 
+# "/api"で起動するアプリ:書き込み
 @app.route("/api", methods=['GET'])
 def sensor_request_api():
+    # リクエストの引数から，各センサ値を抽出
     params = request.args
     wetness = params.get('wetness', default='0', type = str)
     temperature = params.get('temperature', default='0', type = str)
@@ -19,22 +21,27 @@ def sensor_request_api():
     co2 = params.get('co2', default='0', type = str)
     tvoc = params.get('tvoc', default='0', type = str)
 
+    # 乾くまでの残り時間を計算
     rest_of_time = calc.calc(wetness, temperature, humidity)
 
+    # センサ値と計算値をinfluxDBに書き込む
     write(wetness, temperature, humidity, co2, tvoc, rest_of_time)
+
+    # 完了したで
     return 'success'###"wetness" + wetness + " temperature:" + temperature + " humidity" + humidity + " co2" + co2 + " tvoc:" + tvoc
 
+# "/"で起動するアプリ:読み出し
 @app.route("/", methods=['GET'])
 def index():
     client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
-    sensordata = client.query("select * from sensordata where time >= now() - 300m")
+    sensordata = client.query("select * from sensordata where time >= now() - 30m")
 
     sensordata_json2list = list(sensordata.get_points(measurement=None))
 
     # 要素の有無
     if len(sensordata_json2list) == 0:
         #return str("過去%s分間のデータがありません" % str(minutes))
-        datalist = [0,0,0,0,0,0]
+        datalist = [0.0,0.0,0.0,0.0,0.0,0.0]
     else:
         # リストから最新の要素を取り出す
         sensordata_dict = sensordata_json2list[-1]
@@ -56,7 +63,7 @@ def index():
 
     return render_template('index.html', wetness=wetness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
 
-# @app.route('/write', methods=['GET'])
+# influxDBにデータを書き込む関数
 def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):
 
     utc_now = datetime.now(timezone('UTC'))
@@ -90,45 +97,6 @@ def write(wetness, temperature, humidity, co2, tvoc, rest_of_time):
     client.write_points(json_body)
 
     return "write"
-    # answer = "Yes, it is %s!\n" % data["keyword"]
-    # result = {
-    #   "Content-Type": "application/json",
-    #   "Answer":{"Text": data}
-    # }
-    # return answer
-    # return jsonify(result)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=6500, debug=True)
-
-
-#
-#
-# def example_digits(num):
-#
-#     #scilit-learnライブラリに付属しているデータセット"digits"を利用
-#     digits = datasets.load_digits()
-#
-#     #サポートベクターマシン（というもの）を使って、分類.
-#     # 64個のint配列:正解の数字
-#     clf = svm.SVC()
-#     clf.fit(digits.data,digits.target)
-#
-#     #仮に下記の"test_data"のようなデータは、どの数字に該当するか？を予測
-#     test = [num]*64
-#     test_data = [test]
-#
-#     c1 = "-----テスト----"
-#     c2 = str(test_data)
-#
-#     d1 = "-----予測----"
-#     global pre
-#     pre = clf.predict(test_data)
-#     d2 = str(pre)
-#
-#     text = c1+"<br>"+c2+"<br>"+d1+"<br>"+d2
-#
-#     return(text)
-#
-#

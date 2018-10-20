@@ -21,18 +21,6 @@ services:
     volumes:
       - ./chronograf/data/:/var/lib/chronograf/
 
-  kapacitor:
-    image: kapacitor:latest
-    ports:
-      - "3333:9092"
-    links:
-      - influxdb
-      - node
-    volumes:
-      - ./kapacitor/data/:/var/lib/kapacitor
-      - ./kapacitor/config/:/etc/kapacitor/
-      - ./kapacitor/tasks:/etc/kapacitor/load/tasks:ro
-
   jupyter:
     build: ./jupyter
     ports:
@@ -41,17 +29,6 @@ services:
       - PASSWORD=password
     volumes:
       - ./jupyter/notebooks:/notebooks
-
-  flask:
-    build: ./flask
-    ports:
-      - "5000:5000"
-    links:
-      - influxdb
-      - kapacitor
-      - chronograf
-    volumes:
-      - ./flask/:/usr/src/app/
 
   flask_web:
     build: ./flask_web
