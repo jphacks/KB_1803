@@ -5,7 +5,7 @@ services:
     image: influxdb:latest
     ports:
       - "1111:8086"
-    # environment:
+    ## environment:
     #   - PRE_CREATE_DB=trustroots
     volumes:
       - ./influxdb/data:/var/lib/influxdb
