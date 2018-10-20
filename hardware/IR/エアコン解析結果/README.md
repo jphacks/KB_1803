@@ -9,11 +9,13 @@ Panasonic CS-285CF
 ## データの構成
 Leader＋識別番号＋Tracer＋Leader＋データ＋Tracer
 
+1パルス：約430us　→　T = 430us
+
 Leader  
 　データの開始を知らせるコード  
-　ON：8T　　OFF4T
+　ONタイム：8T　　OFFタイム：4T
 
 Tracer  
 　データの終わりを知らせるコード  
-　ON：1T　　OFF：数ms  
+　ONタイム：1T　　OFFタイム：数ms  
 　測定したリモコンは10ms以上OFFタイムであったため，その後の処理も考慮し5.5ms以上のOFFタイムで判定
