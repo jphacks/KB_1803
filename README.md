@@ -45,7 +45,7 @@
 
 #### 4. 端末から室内環境，乾き具合の経過が見れる
 
-![Smart Hanger](Superdry001.jpeg)
+![Smart Hanger](Superdry.001.jpeg)
 
 
 ### 解決出来ること
