@@ -16,7 +16,7 @@ def sensor_request_api():
     # リクエストの引数から，各センサ値を抽出
     params = request.args
     wetness = params.get('wetness', default='0', type = str)
-    dryness = 100.0 - (float(wetness) / 4095.0) * 100.0
+    dryness = (float(wetness) / 4095.0) * 100.0
     temperature = params.get('temperature', default='0', type = str)
     humidity = params.get('humidity', default='0', type = str)
     co2 = params.get('co2', default='0', type = str)
