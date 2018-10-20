@@ -1,4 +1,4 @@
 *.db
 servers/influxdb/data/*
 servers/chronograf/data/*
-Servers/flask_web/_pycache_*
+servers/flask_web/__pycache__/*
