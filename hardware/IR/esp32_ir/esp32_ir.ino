@@ -20,9 +20,11 @@ uint32_t start_t = 0;
 // fade LED PIN (replace with LED_BUILTIN constant for built-in LED)
 #define LED_PIN 21
 
+void ir_tx(char* ir_head, char* ir_data);
+
 void setup() 
 {
-  pinMode(A10, INPUT);
+//  pinMode(A10, INPUT);
 //  pinMode(21, OUTPUT);
 //  digitalWrite(21, LOW);
   ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
@@ -37,21 +39,23 @@ void setup()
 void loop() 
 {
   delay(100);
-  int head_len = sizeof(tx_head);
-//  Serial.println(head_len);
-  int data_len = sizeof(tx_data);
+  ir_tx(tx_head, tx_data);
 
+}
+
+void ir_tx(char* ir_head, char* ir_data)
+{
   ledcWrite(LEDC_CHANNEL_0, 50);
   delayMicroseconds(3500);
 
   ledcWrite(LEDC_CHANNEL_0, 0);
   delayMicroseconds(1500);
 
-  for(int i = 0; i < head_len; i++)
+  for(int i = 0; i < sizeof(ir_head); i++)
   {
     for(int j = 7; j >= 0; j--)
     {
-      if(tx_head[i] & (1<<j))
+      if(ir_head[i] & (1<<j))
       {
         ledcWrite(LEDC_CHANNEL_0, 50);
         delayMicroseconds(430);
@@ -80,11 +84,11 @@ void loop()
   ledcWrite(LEDC_CHANNEL_0, 0);
   delayMicroseconds(1500);
 
-  for(int i = 0; i < data_len; i++)
+  for(int i = 0; i < sizeof(ir_data); i++)
   {
     for(int j = 7; j >= 0; j--)
     {
-      if(tx_data[i] & (1<<j))
+      if(ir_data[i] & (1<<j))
       {
         ledcWrite(LEDC_CHANNEL_0, 50);
         delayMicroseconds(430);
