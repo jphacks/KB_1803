@@ -1,3 +1,33 @@
+/************************************
+          Wi-Fi config
+*************************************/
+//String WIFI_SSID = "TP-LINK_1064";
+//String WIFI_PASSWORD = "78864603";
+//String WIFI_SSID = "~(=^･ω･^)";
+//String WIFI_PASSWORD = "nyannyan";
+String WIFI_SSID = "500KOBE";
+String WIFI_PASSWORD = "@KIITO2018";
+#define JST   3600*9
+
+
+/************************************
+          Access to Server
+*************************************/
+WiFiClient client;
+const char* host = "c47cf667.ngrok.io";
+unsigned int port = 80;
+
+
+/************************************
+          Access to Server
+*************************************/
+int YEAR = 0;
+int MONTH = 0;
+int DAY = 0;
+int HOUR = 0;
+int MIN = 0;
+int SEC = 0;
+int NOW = 0;
 
 
 /************************************
@@ -5,138 +35,118 @@
 *************************************/
 void wifi_init()
 {
-  Serial.println("Reset:");
+  //---------------------------
+  // try WiFi connect
+  //---------------------------
   char ssid[WIFI_SSID.length() + 1];
   char pass[WIFI_PASSWORD.length() + 1];
-  WIFI_SSID.toCharArray(ssid, WIFI_SSID.length()+1);
-  WIFI_PASSWORD.toCharArray(pass, WIFI_PASSWORD.length()+1);
+  WIFI_SSID.toCharArray(ssid, WIFI_SSID.length() + 1);
+  WIFI_PASSWORD.toCharArray(pass, WIFI_PASSWORD.length() + 1);
   Serial.print(ssid);
   Serial.print("//");
   Serial.println(pass);
   WiFi.begin(ssid, pass);
-  
-//  for(int count= 0; WiFi.status() != WL_CONNECTED && count<100; count++) {
-//    Serial.print('.');
-//    delay(500);
-//  }
 
-  while(WiFi.status() != WL_CONNECTED){
+
+  //---------------------------
+  // wait WiFi connect
+  //---------------------------
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print('.');
     delay(500);
   }
-  
-  if(WiFi.status() != WL_CONNECTED){
+
+
+  //---------------------------
+  // try WiFi connect
+  //---------------------------
+  if (WiFi.status() != WL_CONNECTED) {
     Serial.println("Error, W-iFi cannot conncted");
     return 0;
   }
-  
+
   Serial.println();
   Serial.printf("Connected, IP address: ");
   Serial.println(WiFi.localIP());
+  Serial.println("==================================");
 
   configTime( JST, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
   delay(10000);
 }
 
-now_time sendNTPpacket()
-{
+
+void get_time() {
   time_t t;
   struct tm *tm;
 
   t = time(NULL);
   tm = localtime(&t);
-//  Serial.println(" %04d/%02d/%02d %02d:%02d:%02d\n",
-//        tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
-//        tm->tm_hour, tm->tm_min, tm->tm_sec);
 
-  now_time N1;
-  N1.now_year = tm->tm_year + 1900;
-  N1.now_month = tm->tm_mon+1;
-  N1.now_day = tm->tm_mday;
-  N1.now_hour = tm->tm_hour;
-  N1.now_min = tm->tm_min;
-  N1.now_sec = tm->tm_sec;
-
-  return N1;
+  YEAR = tm->tm_year + 1900;
+  MONTH = tm->tm_mon + 1;
+  DAY = tm->tm_mday;
+  HOUR = tm->tm_hour;
+  MIN = tm->tm_min;
+  SEC = tm->tm_sec;
 }
 
-void IR()
-{
-}
 
-void make_data()
+/************************************
+           送信するデータの形成
+ *************************************/
+void send_data()
 {
-  char payload[100]={};
-               
-/************************************
-          送信するデータの形成
-*************************************/
-//  memset(Temp_c, '\0', sizeof(Temp_c)); 
-//  memset(Humi_c, '\0', sizeof(Humi_c)); 
-//  memset(Light_c, '\0', sizeof(Light_c));
-//
-//  dtostrf((float)smeHumidity.readTemperature() - 4.0 , 5, 2, Temp_c);
-//  if((float)smeHumidity.readHumidity() < 100) dtostrf((float)smeHumidity.readHumidity(), 5, 2, Humi_c);
-//  else dtostrf(100.00, 5, 2, Humi_c);
-//
-//  OPT3001 result = light.readResult();
-//  sprintf(Light_c, "%d", (int)result.lux);
-//  for (j = 0; j < ii; j++)
-//  {
-//    sum += human[j];
-//    human[j] = 0;
-//  }
-//  float w = (float)sum / (float)ii;
-//  if(w > 0.001)
-//    HUMAN_c = "1";
-//  else
-//    HUMAN_c = "0";
-//    
-//  sum = 0;
-//  ii = 0;
-//  
-//  strcat(payload, ",");
-//  strcat(payload, Temp_c);
-//  strcat(payload, ",");
-//  strcat(payload, Humi_c);
-//  strcat(payload, ",");
-//  strcat(payload, Light_c);
-//  strcat(payload, ",");
-//  strcat(payload, HUMAN_c);
-//  strcat(payload, ",");
-//  strcat(payload, CO2_c);
-//
-//  float temp = (float)smeHumidity.readTemperature() - 3.0;
-//
+  char payload[100] = {};
+  strcat(payload, "temperature=");
+  strcat(payload, TEMP_c);
+  strcat(payload, "&humidity=");
+  strcat(payload, HUMI_c);
+  strcat(payload, "&wetness=");
+  strcat(payload, WET_c);
+  strcat(payload, "&co2=");
+  strcat(payload, CO2_c);
+  strcat(payload, "&tvoc=");
+  strcat(payload, TVOC_c);
 
-  
-/************************************
-          HTTPのGETでURLを叩く
-*************************************/
+  //Serial.println(payload);
+
+
+  /************************************
+            HTTPのGETでURLを叩く
+  *************************************/
   static uint32_t time_server;
   time_server = millis();
-  while((!client.connect(host, port)) && (millis() - time_server < 50000)) delay(1000);
+  while ((!client.connect(host, port)) && (millis() - time_server < 50000)) {
+    //Serial.println("false");
+    delay(1000);
+  }
 
-  if((millis() - time_server) < 20000) 
+  if ((millis() - time_server) < 20000)
   {
-    client.print(String("GET ") + "api/post/" + String(payload) + " HTTP/1.1\r\n" +
-                        "Host: " + host + "\r\n" + 
-                        "Connection: close\r\n\r\n");
+    //Serial.println("get");
+    client.print(String("GET ") + "/api?" + String(payload) + " HTTP/1.1\r\n" +
+                 "Host: " + host + "\r\n" +
+                 "Connection: close\r\n\r\n");
     int timeout = millis() + 5000;
-    
-    while (client.available() == 0) 
+
+    while (client.available() == 0)
     {
-      if (timeout - millis() < 0) 
+      if (timeout - millis() < 0)
       {
         client.stop();
         return;
       }
     }
-    
-    while(client.available())
+
+    while (client.available())
     {
       String line = client.readStringUntil('\r');
+      //Serial.print(line);
     }
+    //Serial.println("");
     client.stop();
   }
+  //Serial.println("**********************************************");
 }
+
+

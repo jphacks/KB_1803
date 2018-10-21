@@ -36,12 +36,12 @@
 *************************************/
 void port_init()
 {
-  //only input
-//  pinMode(A4,INPUT);
+  pinMode(A4,INPUT);
+  pinMode(A5,OUTPUT);
 
-//  pinMode(SCL,OUTPUT);
-//  digitalWrite(SCL,HIGH);
-//
-//  pinMode(SDA,OUTPUT);
-//  digitalWrite(SDA,LOW);
+  pinMode(SCL,OUTPUT);
+  digitalWrite(SCL,HIGH);
+
+  pinMode(SDA,OUTPUT);
+  digitalWrite(SDA,LOW);
 }
