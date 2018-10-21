@@ -1,7 +1,7 @@
 # Superdry. 極度乾燥（するやで）
 
 ![Smart Hanger](images/superdry.png)
-[![Smart Hanger](images/image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
+[![Smart Hanger](images/image.png)](https://www.youtube.com/watch?v=LvfgYBeXDw8&feature=youtu.be)
 
 ![Smart Hanger](images/hanger.png)
 #### ハンガー
