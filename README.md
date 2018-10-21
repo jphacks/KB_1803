@@ -1,6 +1,7 @@
 # Superdry. 極度乾燥（するやで）
 
 ![Smart Hanger](images/superdry.png)
+### 動画
 [![Smart Hanger](images/thumbnail.png)](https://www.youtube.com/watch?v=LvfgYBeXDw8&feature=youtu.be)
 
 ![Smart Hanger](images/hanger.png)
@@ -74,14 +75,12 @@
 <!-- #### API・データ -->
 <!-- 今回スポンサーから提供されたAPI、製品などの外部技術があれば記述をして下さい。 -->
 
-#### フレームワーク・ライブラリ・モジュール
+#### フレームワーク・ライブラリ・モジュール [詳細](servers/README.md)
 * Server: Flask (Python)
 * DB: InfluxDB
-[詳細](servers/README.md)
 
-#### デバイス
+#### デバイス [詳細](hardware/README.md)
 * ESP32 (Arduino互換+Wi-Fi+BLEモジュール)
-[詳細](hardware/README.md)
 
 <!-- ### 研究内容・事前開発プロダクト（任意） -->
 <!-- ご自身やチームの研究内容や，事前に持ち込みをしたプロダクトがある場合は、こちらに実績なども含め記載をして下さい。-->
