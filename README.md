@@ -3,6 +3,11 @@
 ![Smart Hanger](images/superdry.png)
 [![Smart Hanger](images/image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
 
+![Smart Hanger](images/hanger.png)
+#### ハンガー
+![Smart Hanger](images/app.png)
+#### ブラウザのスクリーンショット
+
 ## 製品概要
 ### 部屋干し X Tech
 
@@ -47,9 +52,6 @@
 
 #### システム構成図
 ![Smart Hanger](images/system.jpeg)
-
-#### スクリーンショット
-![Smart Hanger](images/app.png)
 
 ### 解決出来ること
 <!-- この製品を利用することによって最終的に解決できることについて記載をしてください。 -->
