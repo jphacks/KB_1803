@@ -2,7 +2,7 @@
 
 ![Smart Hanger](images/superdry.png)
 ### 動画
-[![Smart Hanger](images/thumbnail.png)](https://www.youtube.com/watch?v=LvfgYBeXDw8&feature=youtu.be)
+[![Smart Hanger](images/thumbnail.png)](https://www.youtube.com/watch?v=G7C2Xcg_HWw&feature=youtu.be)
 
 ![Smart Hanger](images/hanger.png)
 #### ハンガー
@@ -91,7 +91,3 @@
 - エアコンのリモコンが送信している赤外線信号データの解析
 - 解析した赤外線を活用したエアコン制御
 - 各種システムの統合
-
-#### 2日間に開発した独自の機能・技術
-<!-- * 独自で開発したものの内容をこちらに記載してください -->
-* 特に力を入れた部分をファイルリンク、またはcommit_idを記載してください（任意）
