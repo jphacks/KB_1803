@@ -63,7 +63,7 @@ services:
     build: ./flask_line
     ports:
       - "4649:5000"
-     links:
+    links:
        - influxdb
     volumes:
       - ./flask_line/:/usr/src/app/
