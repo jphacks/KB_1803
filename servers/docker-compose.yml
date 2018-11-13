@@ -15,6 +15,7 @@ services:
       - "2222:8008"
     links:
       - influxdb
+      - kapacitor
     environment:
       - PORT=8008
     volumes:
@@ -44,17 +45,17 @@ services:
       - "3333:9092"
     links:
       - influxdb
-      - flask_line
+      #- flask_line
     volumes:
       - ./kapacitor/data/:/var/lib/kapacitor
       - ./kapacitor/config/:/etc/kapacitor/
       - ./kapacitor/tasks:/etc/kapacitor/load/tasks:ro
 
-  flask_line:
-    build: ./flask_line
-    ports:
-      - "4649:5000"
+  #flask_line:
+    #build: ./flask_line
+    #ports:
+            #  - "4649:5000"
     # links:
     #    - influxdb
-    volumes:
-      - ./flask_line/:/usr/src/app/
+    #volumes:
+            #  - ./flask_line/:/usr/src/app/
