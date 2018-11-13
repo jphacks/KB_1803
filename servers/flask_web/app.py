@@ -16,11 +16,11 @@ def sensor_request_api():
     # リクエストの引数から，各センサ値を抽出
     params = request.args
     wetness = params.get('wetness', default='0', type = str)
-    dryness = 100 - (float(wetness) / 4095.0) * 100.0
-    temperature = params.get('temperature', default='0', type = str)
-    humidity = params.get('humidity', default='0', type = str)
-    co2 = params.get('co2', default='0', type = str)
-    tvoc = params.get('tvoc', default='0', type = str)
+    dryness = int(100 - (float(wetness) / 4095.0) * 100.0)
+    temperature = params.get('temperature', default='0', type = int)
+    humidity = params.get('humidity', default='0', type = int)
+    co2 = params.get('co2', default='0', type = int)
+    tvoc = params.get('tvoc', default='0', type = int)
 
     # 乾くまでの残り時間を計算
     rest_of_time = calc.calc(dryness, temperature, humidity)
@@ -28,8 +28,12 @@ def sensor_request_api():
     # センサ値と計算値をinfluxDBに書き込む
     write(dryness, temperature, humidity, co2, tvoc, rest_of_time)
 
+    print('dryness:')
+    print(dryness)
+    print('temperature')
+    print(temperature)
     # 完了したで
-    return 'success'###"wetness" + wetness + " temperature:" + temperature + " humidity" + humidity + " co2" + co2 + " tvoc:" + tvoc
+    return 'success wetness' + wetness + 'temperature:' + temperature + ' humidity' + humidity + ' co2' + co2 + ' tvoc:' + tvoc
 
 # "/"で起動するアプリ:読み出し
 @app.route("/", methods=['GET'])
