@@ -38,15 +38,6 @@ services:
     volumes:
       - ./flask_web/:/usr/src/app/
 
-  # flask_alert:
-  #   build: ./flask
-  #   ports:
-  #     - "5000:5000"
-  #   links:
-  #     - influxdb
-  #   volumes:
-  #     - ./flask/:/usr/src/app/
-
   kapacitor:
     image: kapacitor:latest
     ports:
@@ -63,7 +54,7 @@ services:
     build: ./flask_line
     ports:
       - "4649:5000"
-    links:
-       - influxdb
+    # links:
+    #    - influxdb
     volumes:
       - ./flask_line/:/usr/src/app/
