@@ -1,0 +1,184 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+/* 上下左右全部のデフォルトのmarginを0にする */
+html,body{
+    margin:0px;
+}
+
+html {
+    position: relative;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    position: relative;
+    color: #7a7a7a;
+    font-weight: lighter;
+    font-size: 48px;
+}
+
+.background {
+    background-image: url(/static/images/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    margin-top: -40px;
+}
+
+td {
+    width: 100vh;
+    padding-left: 50px;
+    border-collapse: collapse;
+    border-bottom: solid 1px #c1d1d8;
+    padding: 20px;
+    text-align: center;
+    vertical-align: middle;
+    vertical-align: top;
+}
+
+.dry, .time {
+    border: none;
+}
+
+.dry {
+    padding-left: 60px;
+    margin-bottom: -80px;
+}
+
+.time {
+    padding-left: 420px;
+    margin-right: 40px;
+    padding-top: 10px;
+}
+
+.temperature {
+    padding: 30px;
+}
+
+.humidity {
+    padding: 30px;
+}
+
+.air-conditioner {
+    height: 144px;
+    border: none;
+}
+
+.highlight {
+    font-size: 72px;
+}
+
+header {
+    background-color: #4b7ba8;
+    height: 170px;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px;
+}
+
+main {
+    height: 100%;
+    margin-top: -20px;
+}
+
+.circle_graph {
+    padding-top: 80px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hour {
+    color: #5787b4;
+    font-size: 88px;
+    font-weight: bold;
+    padding-left: 70px;
+}
+
+.min {
+    color: #5787b4;
+    font-size: 88px;
+    font-weight: bold;
+    padding-left: 30px;
+}
+
+.doughnut {
+  padding-top: 50px;
+  width: 75%;
+  height: 75%;
+  margin: auto;
+}
+
+.chart-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: auto;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  top: 33%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.chart-dryness {
+  color: #56dffc;
+  font-weight: bold;
+  font-size: 200px;
+  position: absolute;
+  top: 70%;
+  left: 26%;
+  /* transform: translateX(-20%); */
+  /* transform: translateY(-50%); */
+  /* padding-top: 10px; */
+}
+
+.chart-percentage {
+  color: #56dffc;
+  font-size: 100px;
+  position: absolute;
+  top: 90%;
+  left: 70%;
+
+}
+
+.circle {
+
+  position: absolute;
+  /* top: 0; */
+  left: 0;
+  /* margin: auto; */
+  right: 0;
+  margin: auto;
+  /* text-align: center; */
+  /* -webkit-transform: translateY(-50%); */
+  transform: translateY(-50%);
+
+  /* display: inline-block; */
+  width: 560px;
+  height: 560px;
+  border-radius: 100%;
+  background: white;
+  text-align:center;
+  line-height: 150px;
+  /* vertical-align: middle; */
+  top: 573px;
+}
+
+#index {
+
+}
+
+footer {
+    /* footerの下に隙間ができるのを防ぐ */
+    overflow: hidden;
+}

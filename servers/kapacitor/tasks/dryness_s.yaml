@@ -1,0 +1,8 @@
+topic: dryness_slack
+id: dryness_s
+kind: slack
+match: level() == CRITICAL
+options:
+  channel: '#alert'
+  username: 'Superdry 極度乾燥（するやで）'
+  icon-emoji: ':smile:'
