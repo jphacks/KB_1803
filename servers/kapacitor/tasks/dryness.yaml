@@ -1,6 +1,0 @@
-topic: dryness_line
-id: dryness
-kind: post
-match: level() == CRITICAL
-options:
-  url: https://superdry-alert.herokuapp.com/
