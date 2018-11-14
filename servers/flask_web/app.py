@@ -73,14 +73,15 @@ def sensor_response_api():
                 'humidity': humidity,
                 'co2': co2,
                 'tvoc': tvoc,
-                'rest_of_time': time
+                'rest_of_time': rest_of_time,
+                'time': time
             }
         ]
 
         return jsonify({'values': values})
 
 
-# 
+#
 @app.route("/", methods=['GET'])
 def index():
     client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
