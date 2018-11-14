@@ -10,8 +10,8 @@ import json
 import calc
 app = Flask(__name__)
 
-# "/api"で起動するアプリ:書き込み
-@app.route("/api", methods=['GET'])
+# 書き込み
+@app.route("/api/write", methods=['GET'])
 def sensor_request_api():
     # リクエストの引数から，各センサ値を抽出
     params = request.args
@@ -33,9 +33,54 @@ def sensor_request_api():
     print('temperature')
     print(temperature)
     # 完了したで
-    return 'success wetness' + wetness + 'temperature:' + temperature + ' humidity' + humidity + ' co2' + co2 + ' tvoc:' + tvoc
+    return 'success'
 
-# "/"で起動するアプリ:読み出し
+# 読み込み
+@app.route('/api/read', methods=['GET'])
+def sensor_response_api():
+
+    client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
+    sensordata = client.query("select * from sensordata")
+
+    sensordata_json2list = list(sensordata.get_points(measurement=None))
+
+    # 要素の有無
+    if len(sensordata_json2list) == 0:
+        #return str("過去%s分間のデータがありません" % str(minutes))
+        datalist = [0.0,0.0,0.0,0.0,0.0,0.0]
+        return "error"
+    else:
+        # リストから最新の要素を取り出す
+        sensordata_dict = sensordata_json2list[-1]
+        # キー
+        keys = list(sensordata_dict.keys())
+        # 値
+        values = list(sensordata_dict.values())
+
+        # 取ってきた値を変数に代入()
+        dryness = (int(sensordata_dict['dryness']))
+        temperature = int(float(sensordata_dict['temperature']))
+        humidity = int(sensordata_dict['humidity'])
+        co2 = int(sensordata_dict['co2'])
+        tvoc = int(sensordata_dict['tvoc'])
+        rest_of_time = int(sensordata_dict['rest_of_time'])
+        time = sensordata_dict['time']
+
+        values = [
+            {
+                'dryness': dryness,
+                'temperature': temperature,
+                'humidity': humidity,
+                'co2': co2,
+                'tvoc': tvoc,
+                'rest_of_time': time
+            }
+        ]
+
+        return jsonify({'values': values})
+
+
+# 
 @app.route("/", methods=['GET'])
 def index():
     client = InfluxDBClient(host='influxdb', port=8086, database='superdry')
@@ -58,7 +103,7 @@ def index():
 
         # 取ってきた値を変数に代入()
         dryness = (int(sensordata_dict['dryness']))
-        temperature = int(float(sensordata_dict['temperature']) / 100.0)
+        temperature = int(float(sensordata_dict['temperature']))
         co2 = int(sensordata_dict['co2'])
         humidity = int(sensordata_dict['humidity'])
         tvoc = int(sensordata_dict['tvoc'])
