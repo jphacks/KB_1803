@@ -5,4 +5,4 @@ match: level() == CRITICAL
 options:
   channel: '#dryness_alert'
   username: 'Superdry 極度乾燥（するやで）'
-  icon-emoji: ':smile:'
+  icon-emoji: ':shirt:'
