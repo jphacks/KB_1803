@@ -1,0 +1,52 @@
+var db = 'superdry'
+var rp = 'autogen'
+var measurement = 'sensordata'
+var groupBy = []
+var whereFilter = lambda: TRUE
+var name = 'DRYNESS_LINE'
+var idVar = name
+var message = '洗濯物が極度乾燥しました！
+乾燥度： {{ index .Fields "value" }}%'
+var idTag = 'alertID'
+var levelTag = 'level'
+var messageField = 'message'
+var durationField = 'duration'
+var outputDB = 'chronograf'
+var outputRP = 'autogen'
+var outputMeasurement = 'alerts'
+var triggerType = 'threshold'
+var crit = 50
+
+var data = stream
+    |from()
+        .database(db)
+        .retentionPolicy(rp)
+        .measurement(measurement)
+        .groupBy(groupBy)
+        .where(whereFilter)
+    |eval(lambda: "wetness")
+        .as('value')
+
+var trigger = data
+    |alert()
+        .crit(lambda: "value" > crit)
+        .message(message)
+        .stateChangesOnly()
+        .topic('dryness_line')
+        
+//topicについてはここに記録 https://scrapbox.io/umetsu/Kapacitor%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8Btopic
+
+trigger
+    |eval(lambda: float("value"))
+        .as('value')
+        .keep()
+    |influxDBOut()
+        .create()
+        .database(outputDB)
+        .retentionPolicy(outputRP)
+        .measurement(outputMeasurement)
+        .tag('alertName', name)
+        .tag('triggerType', triggerType)
+
+trigger
+    |httpOut('output')

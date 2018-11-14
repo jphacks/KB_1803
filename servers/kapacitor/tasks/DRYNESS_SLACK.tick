@@ -1,0 +1,74 @@
+var db = 'superdry'
+
+var rp = 'autogen'
+
+var measurement = 'sensordata'
+
+var groupBy = []
+
+var whereFilter = lambda: TRUE
+
+var name = 'DRYNESS_SLACK'
+
+var idVar = name
+
+var message = '洗濯物が極度乾燥しました！
+乾燥度： {{ index .Fields "value" }}%'
+
+var idTag = 'alertID'
+
+var levelTag = 'level'
+
+var messageField = 'message'
+
+var durationField = 'duration'
+
+var outputDB = 'chronograf'
+
+var outputRP = 'autogen'
+
+var outputMeasurement = 'alerts'
+
+var triggerType = 'threshold'
+
+var crit = 50
+
+var data = stream
+    |from()
+        .database(db)
+        .retentionPolicy(rp)
+        .measurement(measurement)
+        .groupBy(groupBy)
+        .where(whereFilter)
+    |eval(lambda: "wetness")
+        .as('value')
+
+var trigger = data
+    |alert()
+        .crit(lambda: "value" > crit)
+        .message(message)
+        .id(idVar)
+        .idTag(idTag)
+        .levelTag(levelTag)
+        .messageField(messageField)
+        .durationField(durationField)
+        .stateChangesOnly()
+        // 状態変化時のみ発報
+        .topic('dryness_slack')
+
+// 状態が[CRITICAL]のときのみ発報
+trigger
+    |eval(lambda: float("value"))
+        .as('value')
+        .keep()
+    |influxDBOut()
+        .create()
+        .database(outputDB)
+        .retentionPolicy(outputRP)
+        .measurement(outputMeasurement)
+        .tag('alertName', name)
+        .tag('triggerType', triggerType)
+
+trigger
+    |httpOut('output')
+

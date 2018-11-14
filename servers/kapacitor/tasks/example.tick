@@ -1,6 +1,0 @@
-dbrp "superdry"."autogen"
-
-stream
-    |from()
-        .measurement('sensordata')
-    |httpPost('http://flask:5000/reply')
