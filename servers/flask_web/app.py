@@ -4,6 +4,7 @@
 from influxdb import InfluxDBClient
 from pytz import timezone
 from datetime import datetime
+import dateutil.parser
 
 from flask import Flask, jsonify, request, render_template, make_response
 import json
@@ -48,38 +49,49 @@ def sensor_response_api():
     if len(sensordata_json2list) == 0:
         #return str("過去%s分間のデータがありません" % str(minutes))
         datalist = [0.0,0.0,0.0,0.0,0.0,0.0]
-        return "error"
+        return "NoData"
     else:
         # リストから最新の要素を取り出す
-        sensordata_dict = sensordata_json2list[-1]
-        # キー
-        keys = list(sensordata_dict.keys())
-        # 値
-        values = list(sensordata_dict.values())
+        # sensordata_dict = sensordata_json2list[-1]
+        sensordata_json2list.reverse()
+        sensors_dict = []
+        count = 0
+        for sensordata_json in sensordata_json2list:
+            # キー
+            # keys = list(sensordata_dict.keys())
+            # 値
+            # values = list(sensordata_dict.values())
+            # return str(sensordata_json['temperature'])
+            if is_int(sensordata_json['dryness']) and is_int(sensordata_json['temperature']) and is_int(sensordata_json['humidity']) and is_int(sensordata_json['co2']) and is_int(sensordata_json['tvoc']):
+                # 取ってきた値を変数に代入()
+                dryness = (int(sensordata_json['dryness']))
+                temperature = int(sensordata_json['temperature'])
+                humidity = int(sensordata_json['humidity'])
+                co2 = int(sensordata_json['co2'])
+                tvoc = int(sensordata_json['tvoc'])
+                rest_of_time = int(sensordata_json['rest_of_time'])
+                recording_time_str = sensordata_json['time']
+                recording_time = dateutil.parser.parse(recording_time_str)
+                recording_time_simple_str = recording_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        # 取ってきた値を変数に代入()
-        dryness = (int(sensordata_dict['dryness']))
-        temperature = int(float(sensordata_dict['temperature']))
-        humidity = int(sensordata_dict['humidity'])
-        co2 = int(sensordata_dict['co2'])
-        tvoc = int(sensordata_dict['tvoc'])
-        rest_of_time = int(sensordata_dict['rest_of_time'])
-        time = sensordata_dict['time']
+                values = [
+                    {
+                        'count': count,
+                        'dryness': dryness,
+                        'temperature': temperature,
+                        'humidity': humidity,
+                        'co2': co2,
+                        'tvoc': tvoc,
+                        'rest_of_time': rest_of_time,
+                        'time': recording_time_simple_str
+                    }
+                ]
+                sensors_dict.append(values)
+                count += 1
+                if (count >= 100):
+                    break
 
-        values = [
-            {
-                'dryness': dryness,
-                'temperature': temperature,
-                'humidity': humidity,
-                'co2': co2,
-                'tvoc': tvoc,
-                'rest_of_time': rest_of_time,
-                'time': time
-            }
-        ]
-
-        return jsonify({'values': values})
-
+        return jsonify({'values': sensors_dict})
 
 #
 @app.route("/", methods=['GET'])
@@ -147,6 +159,9 @@ def write(dryness, temperature, humidity, co2, tvoc, rest_of_time):
     client.write_points(json_body)
 
     return "write"
+
+def is_int(v):
+    return type(v) is int
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=6500, debug=True)
