@@ -74,18 +74,7 @@ def sensor_response_api():
                 recording_time = dateutil.parser.parse(recording_time_str)
                 recording_time_simple_str = recording_time.strftime('%Y-%m-%d %H:%M:%S')
 
-                values = [
-                    {
-                        'count': count,
-                        'dryness': dryness,
-                        'temperature': temperature,
-                        'humidity': humidity,
-                        'co2': co2,
-                        'tvoc': tvoc,
-                        'rest_of_time': rest_of_time,
-                        'time': recording_time_simple_str
-                    }
-                ]
+                values = { 'count': count, 'dryness': dryness, 'temperature': temperature, 'humidity': humidity, 'co2': co2, 'tvoc': tvoc, 'rest_of_time': rest_of_time, 'time': recording_time_simple_str }
                 sensors_dict.append(values)
                 count += 1
                 if (count >= 100):
