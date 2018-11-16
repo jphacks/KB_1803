@@ -9,6 +9,7 @@ import dateutil.parser
 from flask import Flask, jsonify, request, render_template, make_response
 import json
 import calc
+
 app = Flask(__name__)
 
 # 書き込み
