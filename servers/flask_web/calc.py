@@ -11,7 +11,7 @@ def calc(dryness, temperature, humidity):
     rest_of_time = prediction(X_test)
 
     # # 結果をリターン
-    rest_of_time = 1
+    #rest_of_time = 1
     return rest_of_time
 
 
