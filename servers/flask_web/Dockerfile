@@ -7,5 +7,6 @@ FROM python:3.5.2-onbuild
 RUN apt-get update
 RUN pip install --upgrade pip
 
+
 # サーバを立ち上げる
 CMD ["python", "/usr/src/app/app.py"]
