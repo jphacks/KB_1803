@@ -15,7 +15,7 @@ var outputDB = 'chronograf'
 var outputRP = 'autogen'
 var outputMeasurement = 'alerts'
 var triggerType = 'threshold'
-var crit = 50
+var crit = 99
 
 var data = stream
     |from()
