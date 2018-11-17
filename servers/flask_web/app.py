@@ -81,7 +81,7 @@ def sensor_response_api():
                 recording_time_jst = recording_time.astimezone(timezone('Asia/Tokyo'))
                 recording_time_simple_str = recording_time_jst.strftime('%Y-%m-%d %H:%M:%S')
 
-                values = { 'count': count, 'dryness': dryness, 'temperature': temperature, 'humidity': humidity, 'co2': co2, 'tvoc': tvoc, 'rest_of_time': rest_of_time, 'time': recording_time_simple_str }
+                values = { 'count': count, 'dryness': dryness, 'temperature': temperature, 'humidity': humidity, 'co2': co2, 'tvoc': tvoc, 'rest_of_time': rest_of_time, 'time': recording_time_simple_str}
                 sensors_dict.append(values)
                 count += 1
                 if (count >= 1000):
@@ -122,7 +122,7 @@ def index():
         return render_template('index.html', dryness=dryness, temperature=temperature, humidity=humidity, rest_of_time=rest_of_time)
 
 # influxDBにデータを書き込む関数
-def write(dryness, temperature, humidity, co2, tvoc, rest_of_time):
+def write(dryness, temperature, humidity, co2, tvoc, rest_of_time,calculated_time):
 
     utc_now = datetime.now(timezone('UTC'))
     jst_now = utc_now.astimezone(timezone('Asia/Tokyo'))
@@ -145,6 +145,7 @@ def write(dryness, temperature, humidity, co2, tvoc, rest_of_time):
                 "co2": co2,
                 "tvoc": tvoc,
                 "rest_of_time": rest_of_time
+                "calculated_time":calculated_time
             }
         }
     ]
