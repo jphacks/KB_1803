@@ -8,9 +8,9 @@ def prediction(X_test):
     clf = joblib.load('./model.pkl')
 
     # # 作成したモデルから予測（学習済みモデル使用）
-    y_test_pred = clf.predict(X_test)[0]
+    y_test_pred = clf.predict([[X_test]])
     
-    return float(y_test_pred[0]/60 - 155.95807119469603) #モデルの100%のときの予測時間（秒）を引いて０にしてやる
+    return float(y_test_pred[0] - 155.95807119469603)/60 #モデルの100%のときの予測時間（秒）を引いて０にしてやる
 
 def calc(dryness):
 
