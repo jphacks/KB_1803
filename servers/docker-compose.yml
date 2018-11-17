@@ -21,14 +21,14 @@ services:
     volumes:
       - ./chronograf/data/:/var/lib/chronograf/
 
-  jupyter:
-    build: ./jupyter
-    ports:
-      - "7777:8888"
-    environment:
-      - PASSWORD=password
-    volumes:
-      - ./jupyter/notebooks:/notebooks
+  # jupyter:
+  #   build: ./jupyter
+  #   ports:
+  #     - "7777:8888"
+  #   environment:
+  #     - PASSWORD=password
+  #   volumes:
+  #     - ./jupyter/notebooks:/notebooks
 
   flask_web:
     build: ./flask_web
