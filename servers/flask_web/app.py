@@ -27,8 +27,13 @@ def sensor_request_api():
     # 乾くまでの残り時間を計算
     rest_of_time = calc.calc(dryness, temperature, humidity)
 
+    # 結果がマイナスのとき、0にする
+    calculated_time = rest_of_time
+    if rest_of_time < 0.0:
+        rest_of_time = 0.0
+
     # センサ値と計算値をinfluxDBに書き込む
-    write(dryness, temperature, humidity, co2, tvoc, rest_of_time)
+    write(dryness, temperature, humidity, co2, tvoc, rest_of_time,calculated_time)
 
     print('dryness:')
     print(dryness)
