@@ -25,7 +25,7 @@ def sensor_request_api():
     tvoc = params.get('tvoc', default='0', type = int)
 
     # 乾くまでの残り時間を計算
-    rest_of_time = calc.calc(dryness, temperature, humidity)
+    rest_of_time = calc.calc(dryness)
 
     # 結果がマイナスのとき、0にする
     calculated_time = rest_of_time

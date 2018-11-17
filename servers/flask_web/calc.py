@@ -13,10 +13,10 @@ def prediction(X_test):
     
     return float(y_test_pred[0]/60 - 156.07096152) #156.07096152は、モデルの100%のときの予測時間（秒）
 
-def calc(dryness, temperature, humidity):
+def calc(dryness):
 
     # # テストデータ用意
-    X_test = np.array([[dryness,humidity,temperature]])
+    X_test = dryness
 
     # # # 推定
     rest_of_time = prediction(X_test)
