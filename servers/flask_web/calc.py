@@ -1,6 +1,7 @@
 import numpy as np
-from sklearn import linear_model
+# from sklearn import linear_model
 from sklearn.externals import joblib
+from sklearn.ensemble import RandomForestRegressor # ランダムフォレスト回帰用
 
 def prediction(X_test):
     # # load the model
