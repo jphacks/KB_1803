@@ -144,7 +144,7 @@ def write(dryness, temperature, humidity, co2, tvoc, rest_of_time,calculated_tim
                 "humidity": humidity,
                 "co2": co2,
                 "tvoc": tvoc,
-                "rest_of_time": rest_of_time
+                "rest_of_time": rest_of_time,
                 "calculated_time":calculated_time
             }
         }
