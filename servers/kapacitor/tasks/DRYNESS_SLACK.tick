@@ -13,7 +13,7 @@ var name = 'DRYNESS_SLACK'
 var idVar = name
 
 var message = '洗濯物が極度乾燥しました！
-乾燥度： {{ index .Fields "value" }}%'
+空調を停止します'
 
 var idTag = 'alertID'
 
