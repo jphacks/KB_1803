@@ -11,7 +11,7 @@ def prediction(X_test):
     # # 作成したモデルから予測（学習済みモデル使用）
     y_test_pred = clf.predict(X_test)
     
-    return float(y_test_pred[0]/60 - 156.07096152) #156.07096152は、モデルの100%のときの予測時間（秒）
+    return float(y_test_pred[0]/60 - 155.95807119) #モデルの100%のときの予測時間（秒）を引いて０にしてやる
 
 def calc(dryness):
 
