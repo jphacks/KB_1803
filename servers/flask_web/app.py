@@ -84,7 +84,7 @@ def sensor_response_api():
                 values = { 'count': count, 'dryness': dryness, 'temperature': temperature, 'humidity': humidity, 'co2': co2, 'tvoc': tvoc, 'rest_of_time': rest_of_time, 'time': recording_time_simple_str}
                 sensors_dict.append(values)
                 count += 1
-                if (count >= 1000):
+                if (count >= 200):
                     break
 
         return jsonify({'values': sensors_dict})
